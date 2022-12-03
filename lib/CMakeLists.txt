@@ -1,0 +1,1 @@
+add_library(lib STATIC util.cpp)

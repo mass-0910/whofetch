@@ -1,0 +1,5 @@
+#pragma once
+
+// clang-format off
+#define PRODUCT_VERSION @CMAKE_PROJECT_VERSION@
+// clang-format on
