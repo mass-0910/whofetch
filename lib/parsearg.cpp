@@ -21,7 +21,7 @@ std::string parsearg::get_program_name() {
 void parsearg::argument(std::string argument_name, std::string description, bool is_optional) {
     argument_list.push_back(argument_record_t{argument_name, description});
     if (argument_name.length() > argument_len_max) {
-        argument_len_max = argument_name.length();
+        argument_len_max = static_cast<unsigned int>(argument_name.length());
     }
     if (is_optional) {
         if (!optional_argument_has_passed) {
@@ -42,7 +42,7 @@ void parsearg::option(std::string option_name, std::string description, bool has
         short_option[short_option_name] = option_list.back();
     }
     if (option_name.length() > option_len_max) {
-        option_len_max = option_name.length();
+        option_len_max = static_cast<unsigned int>(option_name.length());
     }
 }
 
