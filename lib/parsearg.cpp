@@ -6,19 +6,6 @@
 #include "util.hpp"
 #include "parsearg.hpp"
 
-struct argument_record_t {
-    std::string name;
-    std::string description;
-    bool is_optional;
-};
-
-struct option_record_t {
-    std::string name;
-    std::string description;
-    char short_name;
-    bool has_argument;
-};
-
 using parsed_arg_t = std::map<std::string, std::string>;
 
 static parsed_arg_t parsed_args;
@@ -30,8 +17,6 @@ static unsigned int argument_len_max = 0;
 static unsigned int option_len_max = 0;
 static int required_argument_num = 0;
 static bool optional_argument_has_passed = false;
-
-using namespace parsearg;
 
 static std::string get_program_name() {
     std::string program_name;
