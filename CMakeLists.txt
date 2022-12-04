@@ -17,3 +17,8 @@ include_directories(include ${PROJECT_BINARY_DIR})
 
 add_subdirectory(lib)
 add_subdirectory(client)
+
+# Test configurations
+enable_testing()
+
+add_test(NAME run_test COMMAND ${CMAKE_PROJECT_NAME})

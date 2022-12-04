@@ -1,1 +1,1 @@
-add_library(lib STATIC util.cpp)
+add_library(lib STATIC util.cpp parsearg.cpp)
