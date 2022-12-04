@@ -8,17 +8,7 @@
 
 using parsed_arg_t = std::map<std::string, std::string>;
 
-static parsed_arg_t parsed_args;
-static std::map<char, option_record_t> short_option;
-static char* argv_0;
-static std::vector<argument_record_t> argument_list;
-static std::vector<option_record_t> option_list;
-static unsigned int argument_len_max = 0;
-static unsigned int option_len_max = 0;
-static int required_argument_num = 0;
-static bool optional_argument_has_passed = false;
-
-static std::string get_program_name() {
+std::string parsearg::get_program_name() {
     std::string program_name;
     if (std::filesystem::exists(argv_0)) {
         program_name = std::filesystem::path(argv_0).filename().string();

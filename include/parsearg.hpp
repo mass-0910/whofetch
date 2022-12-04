@@ -96,6 +96,7 @@ public:
 private:
     using parsed_arg_t = std::map<std::string, std::string>;
 
+    std::string get_program_name();
     parsed_arg_t parsed_args;
     std::map<char, option_record_t> short_option;
     char* argv_0;
