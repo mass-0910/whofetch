@@ -1,7 +1,5 @@
 #include <iostream>
 #include <string>
-#include <vector>
-#include <sstream>
 
 #include "util.hpp"
 #include "parsearg.hpp"
@@ -18,7 +16,7 @@ int main(int argc, char *argv[]) {
 
     // Print usage if help option exists
     if (argument_parser.contains_option("help") && argc >= 1) {
-        argument_parser.print_usage("[options]");
+        argument_parser.print_usage("[options] [name]");
         return 0;
     }
 
