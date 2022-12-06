@@ -69,6 +69,11 @@ resource_error_t resource::delete_resource() {
     return RESOURCE_OK;
 }
 
+resource_error_t resource::copy_resource_to_buffer(std::vector<std::byte> &buffer) {
+    buffer = resource_buffer;
+    return RESOURCE_OK;
+}
+
 resource_error_t resource::load_resource() {
     std::error_code err;
     std::string file_path;

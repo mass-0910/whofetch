@@ -48,6 +48,14 @@ public:
     resource_error_t delete_resource();
 
     /**
+     * @brief Copy resource data to specified buffer
+     *
+     * @param buffer The buffer stored from resource buffer
+     * @return Error code
+     */
+    resource_error_t copy_resource_to_buffer(std::vector<std::byte> &buffer);
+
+    /**
      * @brief Return true if resource is available
      *
      * @retval true available
