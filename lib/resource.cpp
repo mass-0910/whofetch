@@ -41,7 +41,7 @@ resource_error_t resource::get_resource_file_path(std::string &file_path) {
 
 resource_error_t resource::make_resource(std::string &data) {
     resource_buffer.resize(data.length());
-    std::memcpy((void *)data.c_str(), resource_buffer.data(), data.length());
+    std::memcpy(resource_buffer.data(), (void *)data.c_str(), data.length() + 1);
     is_alive = true;
     return RESOURCE_OK;
 }
@@ -49,7 +49,7 @@ resource_error_t resource::make_resource(std::string &data) {
 resource_error_t resource::make_resource(std::byte *buffer, size_t buf_size) {
     resource_buffer.clear();
     resource_buffer.resize(buf_size);
-    std::memcpy((void *)buffer, resource_buffer.data(), buf_size);
+    std::memcpy(resource_buffer.data(), (void *)buffer, buf_size);
     is_alive = true;
     return RESOURCE_OK;
 }
