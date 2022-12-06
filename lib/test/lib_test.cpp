@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 #include <util.hpp>
 #include <parsearg.hpp>
+#include <resource.hpp>
 #include <vector>
 
 struct has_name_t {
@@ -75,4 +76,27 @@ TEST(parsearg_test, option_shortname_test) {
     EXPECT_EQ(pa.parsed_value("optB", true), "arg1");
     EXPECT_EQ(pa.parsed_value("optD", true), "arg2");
     EXPECT_EQ(pa.parsed_value("optE", true), "arg3");
+}
+
+// Test if a resource exists after creating it
+TEST(resource_test, exist_test) {
+    resource res("exist_test");
+    EXPECT_FALSE(res);
+    res.make_resource(std::string("exist_test"));
+    EXPECT_TRUE(res);
+    res.delete_resource();
+    EXPECT_FALSE(res);
+}
+
+// Test for reproducibility when reloading resources
+TEST(resource_test, data_test) {
+    {
+        resource res("data_test");
+        res.make_resource(std::string("data_test"));
+    }
+    resource res_reloaded("data_test");
+    std::vector<std::byte> buffer;
+    res_reloaded.copy_resource_to_buffer(buffer);
+    EXPECT_EQ(std::memcmp(buffer.data(), "data_test", strlen("data_test") + 1), 0);
+    res_reloaded.delete_resource();
 }
