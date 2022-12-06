@@ -47,6 +47,14 @@ public:
      */
     resource_error_t delete_resource();
 
+    /**
+     * @brief Return true if resource is available
+     *
+     * @retval true available
+     * @retval false unavaliable
+     */
+    explicit operator bool() const;
+
 private:
     resource_error_t load_resource();
     resource_error_t save_resource();

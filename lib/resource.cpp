@@ -2,6 +2,7 @@
 #include <cstdlib>
 #include <fstream>
 #include <filesystem>
+#include <iostream>
 
 #include "resource.hpp"
 
@@ -106,4 +107,8 @@ resource_error_t resource::save_resource() {
     }
     ofs.write(reinterpret_cast<const char *>(resource_buffer.data()), resource_buffer.size());
     return RESOURCE_OK;
+}
+
+resource::operator bool() const {
+    return is_alive;
 }
