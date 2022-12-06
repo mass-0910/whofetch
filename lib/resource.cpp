@@ -9,12 +9,8 @@ const std::string appname = "whofetch";
 
 resource::resource(std::string resource_name) : resource_name(resource_name) {
     is_alive = false;
-    std::string file_path;
-    if (get_resource_file_path(file_path) != RESOURCE_OK) {
-        return;
-    }
-    if (load_resource(file_path) != RESOURCE_OK) {
-        return;
+    if (load_resource() == RESOURCE_OK) {
+        is_alive = true;
     }
 }
 
@@ -43,15 +39,18 @@ resource_error_t resource::get_resource_file_path(std::string &file_path) {
     return RESOURCE_OK;
 }
 
-resource_error_t resource::make_resource() {
+resource_error_t resource::make_resource(std::string &data) {
+    resource_buffer.resize(data.length());
+    std::memcpy((void *)data.c_str(), resource_buffer.data(), data.length());
     is_alive = true;
     return RESOURCE_OK;
 }
 
-resource_error_t resource::make_resource(std::string &data) {
-    make_resource();
-    resource_buffer.resize(data.length());
-    std::memcpy((void *)data.c_str(), resource_buffer.data(), data.length());
+resource_error_t resource::make_resource(std::byte *buffer, size_t buf_size) {
+    resource_buffer.clear();
+    resource_buffer.resize(buf_size);
+    std::memcpy((void *)buffer, resource_buffer.data(), buf_size);
+    is_alive = true;
     return RESOURCE_OK;
 }
 
@@ -69,8 +68,12 @@ resource_error_t resource::delete_resource() {
     return RESOURCE_OK;
 }
 
-resource_error_t resource::load_resource(std::string &file_path) {
+resource_error_t resource::load_resource() {
     std::error_code err;
+    std::string file_path;
+    if (get_resource_file_path(file_path) != RESOURCE_OK) {
+        return RESOURCE_UNAVAILABLE_DATA_DIR;
+    }
     size_t file_size = std::filesystem::file_size(file_path, err);
     if (err) {
         return RESOURCE_INVALID_PATH;
@@ -90,6 +93,13 @@ resource_error_t resource::save_resource() {
     if (get_resource_file_path(file_path) != RESOURCE_OK) {
         return RESOURCE_UNAVAILABLE_DATA_DIR;
     }
+
+    // Create direcotry if resource direcotry is not found
+    std::filesystem::path _file_path(file_path);
+    if (!std::filesystem::is_directory(_file_path.parent_path())) {
+        std::filesystem::create_directories(_file_path.parent_path());
+    }
+
     std::ofstream ofs(file_path, std::ios::binary);
     if (!ofs) {
         return RESOURCE_INVALID_PATH;
