@@ -2,7 +2,7 @@
 #include <iostream>
 #include <iomanip>
 
-#include "config.h"
+#include "cmake_config.h"
 #include "util.hpp"
 #include "parsearg.hpp"
 

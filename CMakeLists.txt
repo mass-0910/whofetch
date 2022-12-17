@@ -10,8 +10,10 @@ project(whofetch
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_C_STANDARD 11)
+set(CMAKE_C_STANDARD_REQUIRED ON)
 
-configure_file(include/config.h.in config.h)
+configure_file(include/cmake_config.h.in cmake_config.h)
 
 include_directories(include ${PROJECT_BINARY_DIR})
 

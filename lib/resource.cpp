@@ -8,8 +8,13 @@
 
 const std::string appname = "whofetch";
 
-resource::resource(std::string resource_name) : resource_name(resource_name) {
-    is_alive = false;
+resource::resource(std::string resource_name) : resource_name(resource_name), group_name(""), is_alive(false) {
+    if (load_resource() == RESOURCE_OK) {
+        is_alive = true;
+    }
+}
+
+resource::resource(std::string resource_name, std::string group_name) : resource_name(resource_name), group_name(group_name), is_alive(false) {
     if (load_resource() == RESOURCE_OK) {
         is_alive = true;
     }
@@ -35,6 +40,9 @@ resource_error_t resource::get_resource_file_path(std::string &file_path) {
     std::filesystem::path resource_dir(std::getenv("USER"));
     resource_dir.append(std::string(".") + appname);
 #endif
+    if (!group_name.empty()) {
+        resource_dir.append(group_name);
+    }
     std::filesystem::path _file_path(resource_dir.append(resource_name));
     file_path = _file_path.string();
     return RESOURCE_OK;
@@ -66,11 +74,30 @@ resource_error_t resource::delete_resource() {
     if (err) {
         return RESOURCE_INVALID_PATH;
     }
+    // Delete group directory if it does not contain any file
+    if (!group_name.empty()) {
+        auto group_dir_path(std::filesystem::path(file_path).parent_path());
+        if (!std::filesystem::is_directory(group_dir_path)) {
+            return RESOURCE_INVALID_PATH;
+        }
+        if (std::filesystem::is_empty(group_dir_path)) {
+            std::filesystem::remove(group_dir_path, err);
+            if (err) {
+                return RESOURCE_INVALID_PATH;
+            }
+        }
+    }
     return RESOURCE_OK;
 }
 
 resource_error_t resource::copy_resource_to_buffer(std::vector<std::byte> &buffer) {
     buffer = resource_buffer;
+    return RESOURCE_OK;
+}
+
+resource_error_t resource::copy_resource_to_buffer(std::string &buffer) {
+    std::string converted_str(reinterpret_cast<const char *>(resource_buffer.data()), resource_buffer.size());
+    buffer = converted_str;
     return RESOURCE_OK;
 }
 
@@ -112,6 +139,15 @@ resource_error_t resource::save_resource() {
     }
     ofs.write(reinterpret_cast<const char *>(resource_buffer.data()), resource_buffer.size());
     return RESOURCE_OK;
+}
+
+std::string resource::string() {
+    size_t size = resource_buffer.size();
+    if (*(resource_buffer.end() - 1) == (std::byte)'\0') {
+        size--;
+    }
+    std::string as_string(reinterpret_cast<const char *>(resource_buffer.data()), size);
+    return as_string;
 }
 
 resource::operator bool() const {

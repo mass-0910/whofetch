@@ -3,6 +3,7 @@
 #include <parsearg.hpp>
 #include <resource.hpp>
 #include <vector>
+#include <filesystem>
 
 struct has_name_t {
     int id;
@@ -98,5 +99,21 @@ TEST(resource_test, data_test) {
     std::vector<std::byte> buffer;
     res_reloaded.copy_resource_to_buffer(buffer);
     EXPECT_EQ(std::memcmp(buffer.data(), "data_test", strlen("data_test") + 1), 0);
+    res_reloaded.delete_resource();
+}
+
+// Test resources with group specified
+TEST(resource_test, group_test) {
+    {
+        resource res("group_test", "test_group");
+        res.make_resource(std::string("group_test"));
+    }
+    resource res_reloaded("group_test", "test_group");
+    EXPECT_TRUE(res_reloaded);
+    resource res_different_group("group_test", "diff_group");
+    EXPECT_FALSE(res_different_group);
+    std::vector<std::byte> buffer;
+    res_reloaded.copy_resource_to_buffer(buffer);
+    EXPECT_EQ(std::memcmp(buffer.data(), "group_test", strlen("group_test") + 1), 0);
     res_reloaded.delete_resource();
 }

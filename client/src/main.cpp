@@ -2,11 +2,13 @@
 #include <string>
 
 #include "util.hpp"
+#include "whofetch.hpp"
 #include "parsearg.hpp"
 
 int main(int argc, char *argv[]) {
     parsearg argument_parser;
     argument_parser.argument("name", "The name of the person whose profile you want to see", true);
+    argument_parser.option("make", "Make whofetch profile", false, 'h');
     argument_parser.option("help", "Print this message", false, 'h');
     argument_parser.option("version", "Print version info", false);
 
@@ -25,7 +27,12 @@ int main(int argc, char *argv[]) {
         argument_parser.print_version();
     }
 
+    whofetch whofetch;
+
     // Print user information if this program receive no argument
-    if (argc == 1) {
+    if (argument_parser.contains_option("make")) {
+        whofetch.make_whofetch();
+    } else {
+        whofetch.show_my_whofetch();
     }
 }

@@ -1,3 +1,5 @@
+#pragma once
+
 #include <string>
 #include <vector>
 
@@ -17,6 +19,14 @@ public:
      * @param resource_name resource identifier
      */
     resource(std::string resource_name);
+
+    /**
+     * @brief Construct a new resource object
+     *
+     * @param resource_name resource identifier
+     * @param group_name resource group identifier
+     */
+    resource(std::string resource_name, std::string group_name);
 
     /**
      * @brief Destroy the resource object
@@ -56,6 +66,21 @@ public:
     resource_error_t copy_resource_to_buffer(std::vector<std::byte> &buffer);
 
     /**
+     * @brief Copy resource data to specified buffer
+     *
+     * @param buffer The buffer stored from resource buffer
+     * @return Error code
+     */
+    resource_error_t copy_resource_to_buffer(std::string &buffer);
+
+    /**
+     * @brief Get resource value as a string
+     *
+     * @return The value of resource
+     */
+    std::string string();
+
+    /**
      * @brief Return true if resource is available
      *
      * @retval true available
@@ -68,6 +93,7 @@ private:
     resource_error_t save_resource();
     resource_error_t get_resource_file_path(std::string &file_path);
     std::string resource_name;
+    std::string group_name;
     std::string file_fullpath;
     bool is_alive;
     std::vector<std::byte> resource_buffer;
