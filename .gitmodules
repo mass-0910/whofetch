@@ -1,0 +1,3 @@
+[submodule "jp2a"]
+	path = jp2a
+	url = https://github.com/Talinx/jp2a.git
