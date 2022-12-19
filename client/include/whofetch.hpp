@@ -35,6 +35,11 @@ public:
      */
     whofetch_error_t make_whofetch();
 
+    /**
+     * @brief Remove my whofetch profile
+     */
+    whofetch_error_t remove_my_whofetch();
+
 private:
     void most_distinctive_color(resource &icon, int &r, int &g, int &b);
     void print_icon_aa(resource &icon);

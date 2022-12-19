@@ -111,7 +111,7 @@ whofetch_error_t whofetch::make_whofetch() {
             int parameter_count = 0;
             for (int i = 0; i < PARAMETER_NUM_MAX; i++) {
                 input_is_valid = false;
-                std::regex re(R"((\w+):([^\s]+))");
+                std::regex re(R"((\w+):(.+))");
                 std::smatch m;
                 while (!input_is_valid) {
                     std::cout << "Set your params in the formatted string [Param:Value] (enpty=end):";
@@ -137,8 +137,8 @@ whofetch_error_t whofetch::make_whofetch() {
                 if (recieve_end) {
                     break;
                 }
-                parameter_name[i] = m[1];
-                parameter_value[i] = m[2];
+                parameter_name[i] = trim(m[1]);
+                parameter_value[i] = trim(m[2]);
                 parameter_count++;
             }
             std::string parameter_buf;
@@ -204,24 +204,39 @@ whofetch_error_t whofetch::make_whofetch() {
     return WHOFETCH_OK;
 }
 
+whofetch_error_t whofetch::remove_my_whofetch() {
+    resource name("name", "myself"), company("company", "myself"), parameters("parameter", "myself"), icon_aa("icon", "myself");
+    name.delete_resource();
+    company.delete_resource();
+    parameters.delete_resource();
+    icon_aa.delete_resource();
+    return WHOFETCH_OK;
+}
+
 void whofetch::most_distinctive_color(resource &icon, int &r, int &g, int &b) {
     std::vector<std::byte> buf;
     icon.copy_resource_to_buffer(buf);
-    std::regex re(R"(38;2;([0-9]+);([0-9]+);([0-9]+)m)");
+    std::regex re(R"(38;2;([0-9]+);([0-9]+);([0-9]+)m(.))");
     std::smatch sm;
     std::string icon_aa_str(reinterpret_cast<const char *>(buf.data()), buf.size());
     std::string::const_iterator search_start(icon_aa_str.cbegin());
     int count = 0;
+    r = g = b = 0;
     while (std::regex_search(search_start, icon_aa_str.cend(), sm, re)) {
-        r = std::stoi(sm[1]);
-        g = std::stoi(sm[2]);
-        b = std::stoi(sm[3]);
+        if (sm[4] != " ") {
+            r += std::stoi(sm[1]);
+            g += std::stoi(sm[2]);
+            b += std::stoi(sm[3]);
+            count++;
+        }
         search_start = sm.suffix().first;
         count++;
     }
-    r /= count;
-    g /= count;
-    b /= count;
+    if (count != 0) {
+        r /= count;
+        g /= count;
+        b /= count;
+    }
 }
 
 void whofetch::print_icon_aa(resource &icon) {
