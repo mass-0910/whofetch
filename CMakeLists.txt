@@ -20,6 +20,15 @@ include_directories(include ${PROJECT_BINARY_DIR})
 add_subdirectory(lib)
 add_subdirectory(client)
 
+install(TARGETS whofetch RUNTIME DESTINATION bin)
+if(WIN32)
+    install(TARGETS whofetch
+        RUNTIME_DEPENDENCIES
+        PRE_EXCLUDE_REGEXES "api-ms-" "ext-ms-"
+        POST_EXCLUDE_REGEXES ".*system32/.*\\.dll"
+    )
+endif(WIN32)
+
 # Test configurations
 include(FetchContent)
 FetchContent_Declare(
