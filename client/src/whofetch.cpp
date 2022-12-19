@@ -40,7 +40,7 @@ whofetch_error_t whofetch::show_my_whofetch() {
             std::cout << ansi_move_cursor(-24, 1);
         }
     }
-    std::cout << ansi_move_cursor(0, 40 - (2 + params + 3)) << ansi_abs_from_left(0) << ansi_reset();
+    std::cout << ansi_move_cursor(0, 22 - (2 + params + 3)) << ansi_abs_from_left(0) << ansi_reset();
     return WHOFETCH_OK;
 }
 
@@ -189,7 +189,6 @@ whofetch_error_t whofetch::make_whofetch() {
                     }
                     std::filesystem::remove(temp_file);
                     std::cout << "This image will be registered as your icon. Do you want to change?[y/N]:";
-                    std::cin.ignore();
                     std::getline(std::cin, input);
                     if (input == "" || input == "N" || input == "n") {
                         input_is_valid = true;
