@@ -3,6 +3,7 @@
 #include <parsearg.hpp>
 #include <resource.hpp>
 #include <vector>
+#include <cstring>
 #include <filesystem>
 
 struct has_name_t {

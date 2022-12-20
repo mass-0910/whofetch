@@ -39,7 +39,7 @@ public:
      * @param data The string stored to resource buffer
      * @return Error code
      */
-    resource_error_t make_resource(std::string &data);
+    resource_error_t make_resource(std::string data);
 
     /**
      * @brief Create binary resource data from byte array

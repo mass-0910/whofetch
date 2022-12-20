@@ -72,7 +72,7 @@ std::string ansi_abs_from_left(int x);
  * @return A pointer to the element with the specified name. nullptr if not found.
  */
 template <typename T>
-T* find_by_name(std::vector<T>& vec, std::string& name) {
+T* find_by_name(std::vector<T>& vec, std::string name) {
     for (auto& elem : vec) {
         if (elem.name == name) {
             return &elem;

@@ -12,7 +12,7 @@ enum whofetch_error_t {
 
 class whofetch {
 public:
-    whofetch::whofetch();
+    whofetch();
 
     /**
      * @brief Print to stdout my whofetch profile
