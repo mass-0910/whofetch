@@ -15,7 +15,7 @@ whofetch::whofetch() {}
 whofetch_error_t whofetch::show_my_whofetch() {
     resource name("name", "myself"), company("company", "myself"), parameters("parameter", "myself"), icon_aa("icon", "myself");
     if (!(name && company && parameters && icon_aa)) {
-        print_error("User data not registered");
+        print_error("User profile not registered");
         std::cout << "First, register your data with the following command." << std::endl << std::endl;
         std::cout << "whofetch --make" << std::endl;
         return WHOFETCH_NOT_FOUND;

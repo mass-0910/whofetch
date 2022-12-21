@@ -39,7 +39,7 @@ int main(int argc, char *argv[]) {
         whofetch.make_whofetch();
     } else if (argument_parser.contains_option("delete-my-profile")) {
         whofetch.remove_my_whofetch();
-    } else {  // Print user information if this program receive no argument
+    } else {  // Print user profile if this program receive no argument
         whofetch.show_my_whofetch();
     }
 }
