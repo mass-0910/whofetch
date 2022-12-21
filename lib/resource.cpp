@@ -38,7 +38,7 @@ resource_error_t resource::get_resource_file_path(std::string &file_path) {
     std::filesystem::path resource_dir(value_p);
     resource_dir.append(appname);
 #else
-    std::filesystem::path resource_dir(std::getenv("USER"));
+    std::filesystem::path resource_dir(std::getenv("HOME"));
     resource_dir.append(std::string(".") + appname);
 #endif
     if (!group_name.empty()) {
