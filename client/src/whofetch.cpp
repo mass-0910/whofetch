@@ -168,7 +168,7 @@ whofetch_error_t whofetch::make_whofetch() {
                     }
                     std::filesystem::path temp_dir(value_p);
 #else
-                    std::filesystem::path temp_dir(std::getenv("TEMP"));
+                    std::filesystem::path temp_dir("/tmp");
 #endif
                     auto temp_file = temp_dir.append("whofetch_temp_AA.txt");
                     std::string output_option = std::string("--output=") + temp_file.string();
