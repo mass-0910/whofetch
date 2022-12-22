@@ -4,7 +4,7 @@ Name card exchange system with neofetch style display
 
 ![image](https://user-images.githubusercontent.com/53329734/208696004-a33b6bcd-f6f4-42a6-8a27-3c39bcd960fb.png)
 
-Inspired bu [Neofetch](https://github.com/dylanaraps/neofetch) and [yuyufetch](https://github.com/Hiroya-W/yuyufetch)
+Inspired by [Neofetch](https://github.com/dylanaraps/neofetch) and [yuyufetch](https://github.com/Hiroya-W/yuyufetch)
 
 ## Build
 
