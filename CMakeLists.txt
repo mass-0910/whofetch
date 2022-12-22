@@ -40,6 +40,10 @@ FetchContent_Declare(
 if(WIN32)
     set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 endif(WIN32)
+
+# We don't want to install GoogleTest libs when we run `cmake --install`
+set(INSTALL_GTEST OFF CACHE BOOL "Enable installation of GoogleTest." FORCE)
+
 FetchContent_MakeAvailable(googletest)
 
 enable_testing()
