@@ -15,6 +15,7 @@ target_link_libraries(whofetch
     jp2a
     parsearg
     resource
+    util
 )
 
 set_target_properties(whofetch

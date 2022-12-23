@@ -7,8 +7,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_library(parsearg STATIC
     parsearg.cpp
-    util.cpp
 )
 target_include_directories(parsearg PUBLIC
     ${PROJECT_SOURCE_DIR}
+    ../util
+)
+target_link_libraries(parsearg
+    util
 )
