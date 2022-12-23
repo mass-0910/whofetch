@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 
+#include "cmake_config.h"
 #include "util.hpp"
 #include "whofetch.hpp"
 #include "parsearg.hpp"
@@ -26,7 +27,7 @@ int main(int argc, char *argv[]) {
 
     // Print version info if version option exists
     if (argument_parser.contains_option("version")) {
-        argument_parser.print_version();
+        std::cout << argument_parser.get_program_name() << " version " << PRODUCT_VERSION << std::endl;
         return 0;
     }
 
