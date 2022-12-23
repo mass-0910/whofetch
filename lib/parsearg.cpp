@@ -83,52 +83,50 @@ parsearg_error_t parsearg::parse_args(int argc, char* argv[]) {
     std::string option_name;
     for (int i = 1; i < argc; i++) {
         arg = argv[i];
-        if (arg[0] == '-') {  // if the argument is option
-            if (arg[1] == '-') {
-                option_name = arg.substr(2);
-                auto option_record_p = find_by_name(option_list, option_name);
-                if (option_record_p) {
-                    if (option_record_p->has_argument) {
-                        if (i + 1 < argc) {
-                            parsed_args[option_name + "@opt"] = argv[i++ + 1];
+        if (arg.length() <= 1 || arg[0] != '-') {  // If the argument is not an option
+            parsed_args[argument_list[arg_num++].name] = arg;
+        } else if (arg[0] == '-' && arg[1] == '-') {  // If the argument is long-name option
+            option_name = arg.substr(2);
+            auto option_record_p = find_by_name(option_list, option_name);
+            if (option_record_p) {
+                if (option_record_p->has_argument) {
+                    if (i + 1 < argc) {
+                        parsed_args[option_name + "@opt"] = argv[i++ + 1];
+                    } else {
+                        // Error if there are no arguments after the option which requires an argument of its own
+                        print_error(arg + " option requires an argument");
+                        return PARSE_ERROR_LACK_OF_OPTION_ARGUMENTS;
+                    }
+                } else {
+                    parsed_args[option_name + "@opt"] = "";
+                }
+            } else {
+                // Error if the option is not in the option_list
+                print_error("option " + arg + " is not a valid option.");
+                return PARSE_ERROR_INVALID_OPTIONS;
+            }
+        } else if (arg[0] == '-' && arg[1] != '-') {  // If the argument is abbreviated-name option
+            for (int j = 1; j < arg.length(); j++) {
+                if (short_option.find(arg[j]) != short_option.end()) {
+                    if (short_option[arg[j]].has_argument) {
+                        if (j + 1 < arg.length()) {
+                            parsed_args[short_option[arg[j]].name + "@opt"] = arg.substr(j + 1);
+                        } else if (i + 1 < argc) {
+                            parsed_args[short_option[arg[j]].name + "@opt"] = argv[i++ + 1];
                         } else {
                             // Error if there are no arguments after the option which requires an argument of its own
-                            print_error(arg + " option requires an argument");
+                            print_error(std::string("-") + arg[j] + " option requires an argument");
                             return PARSE_ERROR_LACK_OF_OPTION_ARGUMENTS;
                         }
                     } else {
-                        parsed_args[option_name + "@opt"] = "";
+                        parsed_args[short_option[arg[j]].name + "@opt"] = "";
                     }
                 } else {
                     // Error if the option is not in the option_list
-                    print_error("option " + arg + " is not a valid option.");
+                    print_error(std::string("option -") + arg[j] + " is not a valid option.");
                     return PARSE_ERROR_INVALID_OPTIONS;
                 }
-            } else {
-                for (int j = 1; j < arg.length(); j++) {
-                    if (short_option.find(arg[j]) != short_option.end()) {
-                        if (short_option[arg[j]].has_argument) {
-                            if (j + 1 < arg.length()) {
-                                parsed_args[short_option[arg[j]].name + "@opt"] = arg.substr(j + 1);
-                            } else if (i + 1 < argc) {
-                                parsed_args[short_option[arg[j]].name + "@opt"] = argv[i++ + 1];
-                            } else {
-                                // Error if there are no arguments after the option which requires an argument of its own
-                                print_error(std::string("-") + arg[j] + " option requires an argument");
-                                return PARSE_ERROR_LACK_OF_OPTION_ARGUMENTS;
-                            }
-                        } else {
-                            parsed_args[short_option[arg[j]].name + "@opt"] = "";
-                        }
-                    } else {
-                        // Error if the option is not in the option_list
-                        print_error(std::string("option -") + arg[j] + " is not a valid option.");
-                        return PARSE_ERROR_INVALID_OPTIONS;
-                    }
-                }
             }
-        } else {
-            parsed_args[argument_list[arg_num++].name] = arg;
         }
     }
     // Error if it lacks of required arguments
