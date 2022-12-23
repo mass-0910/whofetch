@@ -40,6 +40,24 @@ FetchContent_MakeAvailable(jp2a)
 
 configure_file(${PROJECT_SOURCE_DIR}/include/cmake_config.h.in ${CMAKE_BINARY_DIR}/cmake_config.h)
 
+install(
+    EXPORT whofetchTargets
+    DESTINATION cmake
+    NAMESPACE whofetch::
+    FILE whofetchTargets.cmake
+)
+
+include(CMakePackageConfigHelpers)
+configure_package_config_file(
+    "Config.cmake.in"
+    "whofetchConfig.cmake"
+    INSTALL_DESTINATION cmake
+)
+
+install(
+    FILES "${CMAKE_CURRENT_BINARY_DIR}/whofetchConfig.cmake"
+    DESTINATION "cmake")
+
 add_subdirectory(libs/parsearg)
 add_subdirectory(libs/resource)
 add_subdirectory(libs/util)
