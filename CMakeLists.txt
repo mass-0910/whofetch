@@ -40,5 +40,7 @@ FetchContent_MakeAvailable(jp2a)
 
 configure_file(${PROJECT_SOURCE_DIR}/include/cmake_config.h.in ${CMAKE_BINARY_DIR}/cmake_config.h)
 
+add_subdirectory(libs/parsearg)
+add_subdirectory(libs/resource)
 add_subdirectory(src)
 add_subdirectory(test)
