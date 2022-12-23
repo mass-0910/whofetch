@@ -42,5 +42,6 @@ configure_file(${PROJECT_SOURCE_DIR}/include/cmake_config.h.in ${CMAKE_BINARY_DI
 
 add_subdirectory(libs/parsearg)
 add_subdirectory(libs/resource)
+add_subdirectory(libs/util)
 add_subdirectory(src)
 add_subdirectory(test)
