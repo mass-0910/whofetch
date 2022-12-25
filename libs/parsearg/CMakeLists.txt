@@ -10,7 +10,6 @@ add_library(parsearg STATIC
 )
 target_include_directories(parsearg PUBLIC
     ${PROJECT_SOURCE_DIR}
-    ../util
 )
 target_link_libraries(parsearg
     util
