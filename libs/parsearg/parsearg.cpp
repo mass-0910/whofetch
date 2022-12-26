@@ -2,7 +2,6 @@
 #include <iostream>
 #include <iomanip>
 
-#include "cmake_config.h"
 #include "util.hpp"
 #include "parsearg.hpp"
 
@@ -71,10 +70,6 @@ void parsearg::print_usage(std::string argument_descriptions) {
             std::cout << opt.description << std::endl;
         }
     }
-}
-
-void parsearg::print_version() {
-    std::cout << get_program_name() << " version " << PRODUCT_VERSION << std::endl;
 }
 
 parsearg_error_t parsearg::parse_args(int argc, char* argv[]) {

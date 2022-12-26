@@ -53,11 +53,6 @@ public:
     void print_usage(std::string argument_descriptrions);
 
     /**
-     * @brief Print version message
-     */
-    void print_version();
-
-    /**
      * @brief Parse arguments to options
      *
      * @param argc The argc passed on main
@@ -93,10 +88,15 @@ public:
      */
     std::string parsed_value(std::string name, bool is_option);
 
+    /**
+     * @brief Get program name
+     *
+     * @return program name
+     */
+    std::string get_program_name();
 private:
     using parsed_arg_t = std::map<std::string, std::string>;
 
-    std::string get_program_name();
     parsed_arg_t parsed_args;
     std::map<char, option_record_t> short_option;
     char* argv_0;

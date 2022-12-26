@@ -13,22 +13,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 
-configure_file(include/cmake_config.h.in cmake_config.h)
-
-include_directories(include ${PROJECT_BINARY_DIR})
-
-add_subdirectory(lib)
-add_subdirectory(client)
-
-install(TARGETS whofetch RUNTIME DESTINATION bin)
-if(WIN32)
-    install(TARGETS whofetch
-        RUNTIME_DEPENDENCIES
-        PRE_EXCLUDE_REGEXES "api-ms-" "ext-ms-"
-        POST_EXCLUDE_REGEXES ".*system32/.*\\.dll"
-    )
-endif(WIN32)
-
 # Test configurations
 include(FetchContent)
 FetchContent_Declare(
@@ -45,5 +29,19 @@ endif(WIN32)
 set(INSTALL_GTEST OFF CACHE BOOL "Enable installation of GoogleTest." FORCE)
 
 FetchContent_MakeAvailable(googletest)
-
 enable_testing()
+
+FetchContent_Declare(
+    jp2a
+    GIT_REPOSITORY https://github.com/mass-0910/jp2a
+    GIT_TAG origin/master
+)
+FetchContent_MakeAvailable(jp2a)
+
+configure_file(${PROJECT_SOURCE_DIR}/include/cmake_config.h.in ${CMAKE_BINARY_DIR}/cmake_config.h)
+
+add_subdirectory(libs/parsearg)
+add_subdirectory(libs/resource)
+add_subdirectory(libs/util)
+add_subdirectory(src)
+add_subdirectory(test)
