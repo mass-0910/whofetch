@@ -35,9 +35,9 @@ Name: "japanese"; MessagesFile: "compiler:Languages\Japanese.isl"
 
 [Files]
 Source: "{#ProjectRoot}\build\bin\Release\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#ProjectRoot}\build\bin\Release\jpeg62.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#ProjectRoot}\build\bin\Release\libpng16.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#ProjectRoot}\build\bin\Release\zlib1.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#ProjectRoot}\build\bin\Release\jpeg*.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#ProjectRoot}\build\bin\Release\libpng*.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#ProjectRoot}\build\bin\Release\zlib*.dll"; DestDir: "{app}"; Flags: ignoreversion
 
 [CustomMessages]
 english.AddPathDesc=Add to PATH environment variable
