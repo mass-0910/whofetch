@@ -1,12 +1,12 @@
-name: build
+name: Build and Test
 
 on:
   push:
   pull_request:
 
 jobs:
-  # Check for building whofetch
-  build_whofetch:
+  # Check for building and testing whofetch
+  build_and_test:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -28,9 +28,13 @@ jobs:
         run: cmake -S . -B build
       - name: Build project with cmake
         run: cmake --build build
+      - name: Test with CTest
+        working-directory: ./build
+        run: ctest
 
   # Check for compiling installer
   build_installer:
+    needs: build_and_test
     runs-on: windows-latest
     steps:
       - name: Checkout repo
