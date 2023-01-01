@@ -22,7 +22,7 @@ jobs:
         run: sudo apt install -y libjpeg-dev libpng-dev
       - name: Generate CMake build directory on windows
         if: matrix.os == 'windows-latest'
-        run: cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE="$VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake"
+        run: cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake"
       - name: Generate CMake build directory on ubuntu
         if: matrix.os == 'ubuntu-latest'
         run: cmake -S . -B build
@@ -38,7 +38,7 @@ jobs:
       - name: Install required libraries
         run: vcpkg install libjpeg-turbo:x64-windows libpng:x64-windows
       - name: Generate CMake build directory
-        run: cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE="$VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake"
+        run: cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake"
       - name: Build project with cmake
         run: cmake --build build --config Release
       - name: Build installer with Inno Setup
