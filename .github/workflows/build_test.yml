@@ -2,7 +2,11 @@ name: Build and Test
 
 on:
   push:
+    paths-ignore:
+      - '**.md'
   pull_request:
+    paths-ignore:
+      - '**.md'
 
 jobs:
   # Check for building and testing whofetch
