@@ -1,0 +1,52 @@
+name: Test of Installer
+
+on:
+  push:
+    paths:
+      - 'installer/**'
+      - ".github/workflows/**"
+      - '!**.md'
+  pull_request:
+    paths:
+      - 'installer/**'
+      - ".github/workflows/**"
+      - '!**.md'
+
+jobs:
+  build_and_test_windows_installer:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+      - name: Install required libraries
+        run: vcpkg install libjpeg-turbo:x64-windows libpng:x64-windows
+      - name: Generate CMake build directory
+        run: cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake"
+      - name: Build project with cmake
+        run: cmake --build build --config Release
+      - name: Build installer with Inno Setup
+        run: iscc.exe installer/windows/main.iss
+
+        # Test the installer
+      - name: Register current PATH environment variable
+        run: echo ("PATH before install is " + [System.Environment]::GetEnvironmentVariable("Path","Machine")); echo ("PREV_PATH=" + [System.Environment]::GetEnvironmentVariable("Path","Machine")) >> $env:GITHUB_ENV
+      - name: Check for running of installer
+        run: ./build/whofetch-setup-win-x64.exe /SILENT /SUPPRESSMSGBOXES /NORESTART
+      - name: Wait for installer process
+        shell: pwsh
+        run: Start-Sleep -Seconds 10  # FIXME: We need to wait for the installer to finish, but I don't know how to detect it. Currently we wait 10 seconds, but it would be preferable to fix this in the future.
+      - name: Check to see if the whofetch folder is included in the PATH environment variable
+        shell: pwsh
+        run: 'echo ([System.Environment]::GetEnvironmentVariable("Path","Machine")); if (!([System.Environment]::GetEnvironmentVariable("Path","Machine").Contains("C:\Program Files\whofetch"))) { throw }'
+      - name: Check to see if previous PATH values are included in the current one
+        shell: pwsh
+        run: 'if (!([System.Environment]::GetEnvironmentVariable("Path","Machine").Contains("${{ env.PREV_PATH }}"))) { throw }'
+      - name: Check for running of uninstaller
+        shell: pwsh
+        run: '[System.Diagnostics.Process]::Start("C:\Program Files\whofetch\unins000.exe", "/SILENT /SUPPRESSMSGBOXES /NORESTART")'
+      - name: Wait for uninstaller process
+        shell: pwsh
+        run: Start-Sleep -Seconds 10  # FIXME: Same as "Wait for installer process"
+      - name: Check to see if the PATH value is restored by uninstallation
+        shell: pwsh
+        run: 'echo ("PATH after uninstall is " + [System.Environment]::GetEnvironmentVariable("Path","Machine")); if ([System.Environment]::GetEnvironmentVariable("Path","Machine") -ne "${{ env.PREV_PATH }}") { throw }'

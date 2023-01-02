@@ -10,7 +10,7 @@ on:
 
 jobs:
   # Check for building and testing whofetch
-  build_and_test:
+  build_and_test_whofetch:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -35,36 +35,3 @@ jobs:
       - name: Test with CTest
         working-directory: ./build
         run: ctest
-
-  # Check for compiling installer
-  build_installer:
-    needs: build_and_test
-    runs-on: windows-latest
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
-      - name: Install required libraries
-        run: vcpkg install libjpeg-turbo:x64-windows libpng:x64-windows
-      - name: Generate CMake build directory
-        run: cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake"
-      - name: Build project with cmake
-        run: cmake --build build --config Release
-      - name: Build installer with Inno Setup
-        run: iscc.exe installer/windows/main.iss
-        # Test the installer
-      - name: Register current PATH environment variable
-        run: echo ("PREV_PATH=" + [System.Environment]::GetEnvironmentVariable("Path","Machine")) >> $GITHUB_ENV
-      - name: Check for running of installer
-        run: ./build/whofetch-setup-win-x64.exe /SILENT
-      - name: Check to see if the whofetch folder is included in the PATH environment variable
-        shell: pwsh
-        run: 'if (!([System.Environment]::GetEnvironmentVariable("Path","Machine").Contains("C:\Program Files\whofetch"))) { throw }'
-      - name: Check to see if previous PATH values are included in the current one
-        shell: pwsh
-        run: 'if (!([System.Environment]::GetEnvironmentVariable("Path","Machine").Contains("${{ env.PREV_PATH }}"))) { throw }'
-      - name: Check for running of uninstaller
-        shell: pwsh
-        run: '[System.Diagnostics.Process]::Start("C:\Program Files\whofetch\unins000.exe", "/SILENT")'
-      - name: Check to see if the PATH value is restored by uninstallation
-        shell: pwsh
-        run: 'if ([System.Environment]::GetEnvironmentVariable("Path","Machine") -ne "${{ env.PREV_PATH }}") { throw }'
