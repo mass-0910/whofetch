@@ -63,6 +63,7 @@ jobs:
         shell: pwsh
         run: if (!([System.Environment]::GetEnvironmentVariable("Path","Machine").Contains("${{ env.PREV_PATH }}"))) { throw }
       - name: Check for running of uninstaller
-        run: & "C:\Program Files\whofetch\unins000.exe" /SILENT
+        shell: pwsh
+        run: [System.Diagnostics.Process]::Start("C:\Program Files\whofetch\unins000.exe", "/SILENT")
       - name: Check to see if the PATH value is restored by uninstallation
         run: if ([System.Environment]::GetEnvironmentVariable("Path","Machine") -ne "${{ env.PREV_PATH }}") { throw }
