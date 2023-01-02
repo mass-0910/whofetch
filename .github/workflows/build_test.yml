@@ -51,3 +51,18 @@ jobs:
         run: cmake --build build --config Release
       - name: Build installer with Inno Setup
         run: iscc.exe installer/windows/main.iss
+        # Test the installer
+      - name: Register current PATH environment variable
+        run: echo ("PREV_PATH=" + [System.Environment]::GetEnvironmentVariable("Path","Machine")) >> $GITHUB_ENV
+      - name: Check for running of installer
+        run: ./build/whofetch-setup-win-x64.exe /SILENT
+      - name: Check to see if the whofetch folder is included in the PATH environment variable
+        shell: pwsh
+        run: if (!([System.Environment]::GetEnvironmentVariable("Path","Machine").Contains("C:\Program Files\whofetch"))) { throw }
+      - name: Check to see if previous PATH values are included in the current one
+        shell: pwsh
+        run: if (!([System.Environment]::GetEnvironmentVariable("Path","Machine").Contains("${{ env.PREV_PATH }}"))) { throw }
+      - name: Check for running of uninstaller
+        run: & "C:\Program Files\whofetch\unins000.exe" /SILENT
+      - name: Check to see if the PATH value is restored by uninstallation
+        run: if ([System.Environment]::GetEnvironmentVariable("Path","Machine") -ne "${{ env.PREV_PATH }}") { throw }
