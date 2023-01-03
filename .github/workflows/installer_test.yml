@@ -32,9 +32,8 @@ jobs:
         run: echo ("PATH before install is " + [System.Environment]::GetEnvironmentVariable("Path","Machine")); echo ("PREV_PATH=" + [System.Environment]::GetEnvironmentVariable("Path","Machine")) >> $env:GITHUB_ENV
       - name: Check for running of installer
         run: ./build/whofetch-setup-win-x64.exe /SILENT /SUPPRESSMSGBOXES /NORESTART
-      - name: Wait for installer process
-        shell: pwsh
-        run: Start-Sleep -Seconds 10  # FIXME: We need to wait for the installer to finish, but I don't know how to detect it. Currently we wait 10 seconds, but it would be preferable to fix this in the future.
+        # FIXME: There is an occasional case that the PATH value does not change correctly when the installer is run on windows runner.
+        #        We may need to fix this or exclude the test that checks the PATH value.
       - name: Check to see if the whofetch folder is included in the PATH environment variable
         shell: pwsh
         run: 'echo ([System.Environment]::GetEnvironmentVariable("Path","Machine")); if (!([System.Environment]::GetEnvironmentVariable("Path","Machine").Contains("C:\Program Files\whofetch"))) { throw }'
