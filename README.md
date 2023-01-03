@@ -1,5 +1,8 @@
 # whofetch
 
+[![Build and Test](https://github.com/mass-0910/whofetch/actions/workflows/build_test.yml/badge.svg)](https://github.com/mass-0910/whofetch/actions/workflows/build_test.yml)
+[![Test of Installer](https://github.com/mass-0910/whofetch/actions/workflows/installer_test.yml/badge.svg)](https://github.com/mass-0910/whofetch/actions/workflows/installer_test.yml)
+
 Name card exchange system with neofetch style display
 
 ![image](https://user-images.githubusercontent.com/53329734/208696004-a33b6bcd-f6f4-42a6-8a27-3c39bcd960fb.png)
