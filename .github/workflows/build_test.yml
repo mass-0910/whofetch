@@ -1,0 +1,37 @@
+name: Build and Test
+
+on:
+  push:
+    paths-ignore:
+      - '**.md'
+  pull_request:
+    paths-ignore:
+      - '**.md'
+
+jobs:
+  # Check for building and testing whofetch
+  build_and_test_whofetch:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+      - name: Install required libraries on windows
+        if: matrix.os == 'windows-latest'
+        run: vcpkg install libjpeg-turbo:x64-windows libpng:x64-windows
+      - name: Install required libraries on ubuntu
+        if: matrix.os == 'ubuntu-latest'
+        run: sudo apt install -y libjpeg-dev libpng-dev
+      - name: Generate CMake build directory on windows
+        if: matrix.os == 'windows-latest'
+        run: cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake"
+      - name: Generate CMake build directory on ubuntu
+        if: matrix.os == 'ubuntu-latest'
+        run: cmake -S . -B build
+      - name: Build project with cmake
+        run: cmake --build build
+      - name: Test with CTest
+        working-directory: ./build
+        run: ctest
