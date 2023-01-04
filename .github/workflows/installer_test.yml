@@ -12,6 +12,9 @@ on:
       - ".github/workflows/**"
       - '!**.md'
 
+env:
+  GET_PATH_COMMAND: (Get-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name Path).Path)
+
 jobs:
   build_and_test_windows_installer:
     runs-on: windows-latest
@@ -29,20 +32,23 @@ jobs:
 
         # Test the installer
       - name: Register current PATH environment variable
-        run: echo ("PATH before install is " + [System.Environment]::GetEnvironmentVariable("Path","Machine")); echo ("PREV_PATH=" + [System.Environment]::GetEnvironmentVariable("Path","Machine")) >> $env:GITHUB_ENV
+        run: echo ("PREV_PATH=" + ${{ env.GET_PATH_COMMAND }} >> $env:GITHUB_ENV
       - name: Check for running of installer
-        run: ./build/whofetch-setup-win-x64.exe /SILENT /SUPPRESSMSGBOXES /NORESTART
-        # FIXME: There is an occasional case that the PATH value does not change correctly when the installer is run on windows runner.
-        #        We may need to fix this or exclude the test that checks the PATH value.
+        shell: pwsh
+        run: ./build/whofetch-setup-win-x64.exe /SILENT /SUPPRESSMSGBOXES /NORESTART; Start-Sleep -Seconds 10
+      - name: Register PATH environment variable after installing
+        run: echo ("PATH_AFTER_INSTALL=" + ${{ env.GET_PATH_COMMAND }} >> $env:GITHUB_ENV
       - name: Check to see if the whofetch folder is included in the PATH environment variable
         shell: pwsh
-        run: 'echo ([System.Environment]::GetEnvironmentVariable("Path","Machine")); if (!([System.Environment]::GetEnvironmentVariable("Path","Machine").Contains("C:\Program Files\whofetch"))) { throw }'
+        run: 'if (!("${{ env.PATH_AFTER_INSTALL }}".Contains("C:\Program Files\whofetch"))) { throw }'
       - name: Check to see if previous PATH values are included in the current one
         shell: pwsh
-        run: 'if (!([System.Environment]::GetEnvironmentVariable("Path","Machine").Contains("${{ env.PREV_PATH }}"))) { throw }'
+        run: 'if (!("${{ env.PATH_AFTER_INSTALL }}".Contains("${{ env.PREV_PATH }}"))) { throw }'
       - name: Check for running of uninstaller
         shell: pwsh
-        run: '[System.Diagnostics.Process]::Start("C:\Program Files\whofetch\unins000.exe", "/SILENT /SUPPRESSMSGBOXES /NORESTART")'
+        run: '[System.Diagnostics.Process]::Start("C:\Program Files\whofetch\unins000.exe", "/SILENT /SUPPRESSMSGBOXES /NORESTART"); Start-Sleep -Seconds 10'
+      - name: Register PATH environment variable after uninstalling
+        run: echo ("PATH_AFTER_UNINSTALL=" + ${{ env.GET_PATH_COMMAND }} >> $env:GITHUB_ENV
       - name: Check to see if the PATH value is restored by uninstallation
         shell: pwsh
-        run: 'echo ("PATH after uninstall is " + [System.Environment]::GetEnvironmentVariable("Path","Machine")); if ([System.Environment]::GetEnvironmentVariable("Path","Machine") -ne "${{ env.PREV_PATH }}") { throw }'
+        run: 'if ("${{ env.PATH_AFTER_UNINSTALL }}" -ne "${{ env.PREV_PATH }}") { throw }'
