@@ -18,9 +18,6 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
-      - name: Install required libraries on windows
-        if: matrix.os == 'windows-latest'
-        run: vcpkg install libjpeg-turbo:x64-windows libpng:x64-windows
       - name: Install required libraries on ubuntu
         if: matrix.os == 'ubuntu-latest'
         run: sudo apt install -y libjpeg-dev libpng-dev
