@@ -68,7 +68,10 @@ begin
     if Pos(';' + Uppercase(Path) + ';', ';' + Uppercase(Paths) + ';') > 0 then exit;
 
     { App string to the end of the path variable }
-    Paths := Paths + ';'+ Path +';'
+    if Copy(Paths, Length(Paths), 1) = ';' then
+        Paths := Paths + Path + ';'
+    else
+        Paths := Paths + ';'+ Path +';';
 
     { Overwrite (or create if missing) path environment variable }
     if RegWriteStringValue(HKEY_LOCAL_MACHINE, EnvironmentKey, 'Path', Paths)
