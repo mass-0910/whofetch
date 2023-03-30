@@ -1,0 +1,29 @@
+name: macOS CI
+
+on:
+  push:
+    paths-ignore:
+      - '**.md'
+  pull_request:
+    paths-ignore:
+      - '**.md'
+
+jobs:
+  build_and_test_whofetch:
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install required libraries
+        run: brew install jpeg-turbo libpng
+
+      - name: Generate a CMake build directory
+        run: cmake -S . -B build
+
+      - name: Build the project with CMake
+        run: cmake --build build
+
+      - name: Test with CTest
+        working-directory: ./build
+        run: ctest

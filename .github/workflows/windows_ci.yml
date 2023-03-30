@@ -1,0 +1,26 @@
+name: Windows CI
+
+on:
+  push:
+    paths-ignore:
+      - '**.md'
+  pull_request:
+    paths-ignore:
+      - '**.md'
+
+jobs:
+  build_and_test_whofetch:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Generate a CMake build directory
+        run: cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake"
+
+      - name: Build the project with CMake
+        run: cmake --build build
+
+      - name: Test with CTest
+        working-directory: ./build
+        run: ctest

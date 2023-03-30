@@ -1,7 +1,8 @@
 # whofetch
 
-[![Build and Test](https://github.com/mass-0910/whofetch/actions/workflows/build_test.yml/badge.svg)](https://github.com/mass-0910/whofetch/actions/workflows/build_test.yml)
-[![Test of Installer](https://github.com/mass-0910/whofetch/actions/workflows/installer_test.yml/badge.svg)](https://github.com/mass-0910/whofetch/actions/workflows/installer_test.yml)
+[![Build and Test](https://github.com/mass-0910/whofetch/actions/workflows/windows_ci.yml/badge.svg)](https://github.com/mass-0910/whofetch/actions/workflows/windows_ci.yml)
+[![Build and Test](https://github.com/mass-0910/whofetch/actions/workflows/ubuntu_ci.yml/badge.svg)](https://github.com/mass-0910/whofetch/actions/workflows/ubuntu_ci.yml)
+[![Build and Test](https://github.com/mass-0910/whofetch/actions/workflows/macos_ci.yml/badge.svg)](https://github.com/mass-0910/whofetch/actions/workflows/macos_ci.yml)
 
 Name card exchange system with neofetch style display
 
