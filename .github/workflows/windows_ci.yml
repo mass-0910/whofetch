@@ -18,7 +18,8 @@ jobs:
       - name: Restore artifacts, or setup vcpkg (do not install any package)
         uses: lukka/run-vcpkg@v10
         with:
-          vcpkgDirectory: '${{ env.VCPKG_INSTALLATION_ROOT }}'
+          vcpkgDirectory: ${{ env.VCPKG_INSTALLATION_ROOT }}
+          vcpkgGitCommitId: b81bc3a83
 
       - name: Generate a CMake build directory
         run: cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake"
