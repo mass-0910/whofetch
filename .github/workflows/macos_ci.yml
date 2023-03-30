@@ -1,4 +1,4 @@
-name: Build and Test on Ubuntu
+name: macOS CI
 
 on:
   push:
@@ -10,13 +10,13 @@ on:
 
 jobs:
   build_and_test_whofetch:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
 
     steps:
       - uses: actions/checkout@v3
 
       - name: Install required libraries
-        run: sudo apt install -y libjpeg-dev libpng-dev
+        run: brew install jpeg-turbo libpng
 
       - name: Generate a CMake build directory
         run: cmake -S . -B build
