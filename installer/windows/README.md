@@ -1,4 +1,4 @@
-# winget installer for windows
+# whofetch installer for Windows
 
 This directory contains the Inno Setup script that defines the whofetch installer for Windows OS.
 
