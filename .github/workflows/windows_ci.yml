@@ -15,7 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Get the vcpkg's location
+      - name: Get the vcpkg's path
         id: vcpkg_path
         run: |
           echo "VCPKG_PATH=$env:VCPKG_INSTALLATION_ROOT" >> $env:GITHUB_OUTPUT
