@@ -15,11 +15,24 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Get the vcpkg's location
+        id: vcpkg_path
+        run: |
+          echo "VCPKG_PATH=$env:VCPKG_INSTALLATION_ROOT" >> $env:GITHUB_OUTPUT
+
+      - name: Get the vcpkg's hash
+        id: vcpkg_hash
+        working-directory: ${{ steps.vcpkg_path.outputs.VCPKG_PATH }}
+        run: |
+          echo $(git show --format='%H' --no-patch)
+          echo "VCPKG_HASH=$(git show --format='%H' --no-patch)" >> $env:GITHUB_OUTPUT
+
       - name: Restore artifacts, or setup vcpkg (do not install any package)
         uses: lukka/run-vcpkg@v10
         with:
-          vcpkgDirectory: ${{ env.VCPKG_INSTALLATION_ROOT }}
-          vcpkgGitCommitId: b81bc3a83
+          vcpkgDirectory: ${{ steps.vcpkg_path.outputs.VCPKG_PATH }}
+          vcpkgGitCommitId: ${{ steps.vcpkg_hash.outputs.VCPKG_HASH }}
+          vcpkgJsonGlob: '**/vcpkg.json'
 
       - name: Generate a CMake build directory
         run: cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake"
